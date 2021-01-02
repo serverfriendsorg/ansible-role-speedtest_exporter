@@ -1,0 +1,13 @@
+---
+speedtest_exporter_architecture: 'linux_amd64'
+speedtest_exporter_version: '0.3.0'
+
+speedtest_exporter_listen_address: ':9112'
+
+speedtest_exporter_download_url: 'https://bintray.com/artifact/download/nlamirault/oss/speedtest_exporter-{{ speedtest_exporter_version }}_{{ speedtest_exporter_architecture }}'
+speedtest_exporter_install_path: '/opt/prometheus/speedtest_exporter-{{ speedtest_exporter_version }}'
+
+speedtest_exporter_user: 'prometheus'
+speedtest_exporter_group: 'prometheus'
+speedtest_exporter_user_home: '/home/prometheus'
+speedtest_exporter_user_shell: '/sbin/nologin'

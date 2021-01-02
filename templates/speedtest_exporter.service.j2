@@ -1,0 +1,22 @@
+###################################
+# {{ansible_managed}} #
+###################################
+
+[Unit]
+Description=Prometheus speedtest exporter service
+After=network.target
+Wants=network.target
+
+[Service]
+ExecStart={{ speedtest_exporter_install_path }}/speedtest_exporter --web.listen-address {{ speedtest_exporter_listen_address }}
+
+Restart=always
+RestartSec=20
+TimeoutSec=300
+User={{ speedtest_exporter_user }}
+Group={{ speedtest_exporter_group }}
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

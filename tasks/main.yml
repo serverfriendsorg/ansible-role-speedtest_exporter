@@ -1,0 +1,48 @@
+---
+- name: Ensure group for prometheus user exists
+  group:
+    name: '{{ speedtest_exporter_group }}'
+    state: present
+
+- name: Add prometheus user
+  user:
+    name: '{{ speedtest_exporter_user }}'
+    home: '{{ speedtest_exporter_user_home }}'
+    group: '{{ speedtest_exporter_group }}'
+    shell: '{{ speedtest_exporter_user_shell }}'
+    state: present
+
+- name: Create speedbox exporter directory
+  file:
+    path: '{{ speedtest_exporter_install_path }}'
+    owner: '{{ speedtest_exporter_user }}'
+    group: '{{ speedtest_exporter_group }}'
+    mode: 0755
+    state: directory
+
+- name: Download Speedbox Exporter
+  get_url:
+    url: '{{ speedtest_exporter_download_url }}'
+    dest: '{{ speedtest_exporter_install_path }}/speedtest_exporter'
+    owner: '{{ speedtest_exporter_user }}'
+    group: '{{ speedtest_exporter_group }}'
+    mode: 0770
+
+- name: Install speedbox exporter systemd unit file
+  template:
+    src: 'speedtest_exporter.service.j2'
+    dest: '/etc/systemd/system/speedtest_exporter.service'
+    owner: '{{ speedtest_exporter_user }}'
+    group: '{{ speedtest_exporter_group }}'
+    mode: 0644
+  notify:
+    - reload systemd_daemon
+    - restart speedtest_exporter
+
+- meta: flush_handlers
+
+- name: Check if speedtest exporter is started
+  service:
+    name: speedtest_exporter.service
+    state: started
+    enabled: yes
